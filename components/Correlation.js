@@ -1,12 +1,20 @@
 import * as React from "react";
 import Dropzone from 'react-dropzone'
 
-const dragDropMessage = <div>1. Upload a CSV in this box</div>
+const dragDropMessage = "1. Upload a CSV in this box"
 const Correlation = () => {
   const [message, setMessage] = React.useState(dragDropMessage);
   const [csv, setCSV] = React.useState(null);
   const [result, setResult] = React.useState("");
   const [enableDownload, setEnableDownload] = React.useState(false);
+
+  const captureEvent = () => {
+    if (typeof window !== 'undefined' && typeof (window).gtag !== 'undefined') {
+      (window).gtag('event', 'CSV uploaded', {
+        'event_category': 'engagement',
+      });
+    }
+  }
 
   const handleSubmit = (acceptedFiles) => {
 
@@ -37,6 +45,7 @@ const Correlation = () => {
         <Dropzone onDrop={acceptedFiles => {
           setCSV(acceptedFiles)
           setMessage("CSV uploaded!")
+          captureEvent()
           handleSubmit(acceptedFiles)
         }}>
           {({ getRootProps, getInputProps }) => (
