@@ -35,7 +35,7 @@ export default function Home() {
         <style jsx global>{`
         html,
         body {
-          padding: 15px;
+          padding: 0;
           margin: 0;
           font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
             Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
@@ -45,9 +45,13 @@ export default function Home() {
         * {
           box-sizing: border-box;
         }
+        p {
+          padding: 0;
+          margin: 0;
+        }
       `}</style>
       </div>
-      <div style={{ "marginBottom": "30px", marginLeft: "9px" }}>
+      <div style={{ "marginBottom": "30px", marginLeft: "9px", marginTop: "9px" }}>
         <p>
           <a href="https://www.instagram.com/michaelminhvo/">
             <img style={{ height: "32px" }} src="/glyph-logo_May2016.png"></img></a>

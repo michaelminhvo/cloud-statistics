@@ -7,6 +7,8 @@ const Correlation = () => {
   const [csv, setCSV] = React.useState(null);
   const [result, setResult] = React.useState("");
   const [enableDownload, setEnableDownload] = React.useState(false);
+  const [enableDownloadImage, setEnableDownloadImage] = React.useState(false);
+  const [image, setImage] = React.useState("");
 
   const captureEvent = () => {
     if (typeof window !== 'undefined' && typeof (window).gtag !== 'undefined') {
@@ -37,6 +39,25 @@ const Correlation = () => {
         setEnableDownload(false)
         setMessage(`Error while processing: ${error}`);
       })
+
+    const image = fetch(
+      `https://us-central1-shaped-terrain-284522.cloudfunctions.net/correlation-heat-map`,
+      {
+        method: "POST",
+        body: data,
+      })
+      .then((resp) => {
+        return resp.blob()
+      })
+      .then(blob => {
+        const img = URL.createObjectURL(blob);
+        setImage(img);
+        setEnableDownloadImage(true);
+      })
+      .catch((error) => {
+        setEnableDownloadImage(false)
+        setMessage(`Error while processing: ${error}`);
+      })
   }
 
   return (
@@ -58,18 +79,28 @@ const Correlation = () => {
             </section>
           )}
         </Dropzone>
-      </form>
-      {
         <a
           className="pull-right btn btn-primary"
-          style={{ margin: 10 }}
+          style={{ width: "300px" }}
           href={`data:text/json;charset=utf-8,${encodeURIComponent(
             (result))}`}
           download="data.csv"
         >
-          <button disabled={!enableDownload} style={{ lineHeight: "32px" }} type="button">2. Download Correlation CSV</button>
+          <button disabled={!enableDownload} style={{ lineHeight: "32px", width: "300px", borderRadius: "0 0 5px 5px" }} type="button">2. Download Correlation CSV</button>
         </a>
-      }
+      </form>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {image &&
+          <div style={{ borderTop: "1px solid" }}>
+            <a href={image} download="correlation-heat-map.png" >
+              <div style={{ margin: "12px" }}>
+                3. Download Correlation Matrix Heat Map
+                </div>
+            </a>
+            <img src={image} alt="Correlation matrix" />
+          </div>
+        }
+      </div>
     </>
   );
 }
